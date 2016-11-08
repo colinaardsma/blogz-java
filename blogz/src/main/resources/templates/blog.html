@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: header">
+</head>
+<body>
+	<div th:replace="template :: menu"></div>
+	<h1>blog posts!</h1>
+	<div th:each="post,iterStat : ${postList}"
+		th:class="${iterStat.odd}? 'odd'">
+		<h2>
+			<a th:href="'/blog/' + ${post}" th:text="${post.title}"></a>
+		</h2>
+		<p th:text="${post.body}"></p>
+		<p class="post-author">
+			written by <a th:href="'/blog/' + ${post.author}"
+				th:text="${post.author}"></a> <span
+				th:text="'on ' + ${post.created}"></span>
+		</p>
+	</div>
+
+	<div th:if="${username}">
+		<div th:if="${prev_page}">
+			<a th:href="'/blog/' + ${username} + '?page=' + ${prev_page}">&lt;
+				prev</a>
+		</div>
+		<div th:if="${prev_page != null and next_page != null}">&nbsp;&nbsp;
+			| &nbsp;&nbsp;</div>
+		<div th:if="${next_page}">
+			<a th:href="'/blog/' + ${username} + '?page=' + ${next_page}">next
+				&gt;</a>
+		</div>
+	</div>
+
+	<div th:unless="${username}">
+		<div th:if="${prev_page}">
+			<a th:href="'/blog?page=' + ${prev_page}">&lt; prev</a>
+		</div>
+		<div th:if="${prev_page != null and next_page != null}">&nbsp;&nbsp;
+			| &nbsp;&nbsp;</div>
+		<div th:if="${next_page}">
+			<a th:href="'/blog?page=' + ${next_page}">next &gt;</a>
+		</div>
+	</div>
+
+</body>
+<div th:replace="template :: footer"></div>
+</html>
+
+
+
+
+
+<!-- {% for post in posts %}
+
+<h2><a href="/blog/{{ post.key().id() }}">{{ post.title }}</a></h2>
+<p>{{ post.body }}</p>
+TODO add author w/ link to author's blog page
+<p class="post-author">
+    written by <a href="/blog/{{ post.author.username }}">{{ post.author.username }}</a> on {{ post.created.strftime('%Y-%m-%d') }}
+</p>
+
+{% endfor %} -->
+
+<!-- {% if username %}
+    {% if prev_page %}
+    <a href="/blog/{{ username }}?page={{ prev_page }}">&lt; prev</a>
+    {% endif %}
+
+    {% if prev_page and next_page %}
+    &nbsp;&nbsp; | &nbsp;&nbsp;
+    {% endif %}
+
+    {% if next_page %}
+    <a href="/blog/{{ username }}?page={{ next_page }}">next &gt;</a>
+    {% endif %}
+{% endif %} -->
+
+<!-- {% if not username %}
+    {% if prev_page %}
+    <a href="/blog?page={{ prev_page }}">&lt; prev</a>
+    {% endif %}
+
+    {% if prev_page and next_page %}
+    &nbsp;&nbsp; | &nbsp;&nbsp;
+    {% endif %}
+
+    {% if next_page %}
+    <a href="/blog?page={{ next_page }}">next &gt;</a>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
+ -->

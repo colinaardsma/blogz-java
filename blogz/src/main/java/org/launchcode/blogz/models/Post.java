@@ -6,15 +6,17 @@ import java.util.Date;
 public class Post extends Entity{
 	private String title;
 	private String body;
+	private String author;
 	private final Date created;
 	private Date modified;
 	private static ArrayList<Post> postList = new ArrayList<Post>();
 
-	public Post(String title, String body) {
+	public Post(String title, String body, String author) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.title = title;
 		this.body = body;
+		this.author = "AUTHOR"; // change this
 		this.created = new Date();
 		this.modified = created;
 		Post.postList.add(this);
@@ -26,6 +28,10 @@ public class Post extends Entity{
 	
 	public String getBody() {
 		return this.body;
+	}
+	
+	public String getAuthor() {
+		return this.author;
 	}
 	
 	public Date getCreated() {

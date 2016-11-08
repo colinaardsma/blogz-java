@@ -3,15 +3,18 @@
 <head th:replace="template :: header">
 </head>
 <body>
+	<div th:replace="template :: menu"></div>
 	<form method="post">
 		<table>
 			<tr>
 				<td>Username:</td>
-				<td><input class="regform" type="text" name="username" th:attr="value=${username}"></input></td>
+				<td><input class="regform" type="text" name="username"
+					th:attr="value=${username}"></input></td>
 			</tr>
 			<tr>
 				<td>Password:</td>
-				<td><input class="regform" type="password" name="password" value=""></input></td>
+				<td><input class="regform" type="password" name="password"
+					value=""></input></td>
 			</tr>
 			<tr>
 				<td><div style="color: red" th:text="${error}"></div></td>

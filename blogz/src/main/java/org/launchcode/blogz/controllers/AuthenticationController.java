@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AuthenticationController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET) // tell Spring to use this method for all get requests to "/hello"
-	public String loginform(HttpServletRequest request, Model model) {
+	public String loginForm(HttpServletRequest request, Model model) {
 		return "login";
 	}
 
@@ -29,7 +29,7 @@ public class AuthenticationController {
 		
 		String error = null;
 		Matcher usernameMatch = usernamePattern.matcher(username);
-		Matcher passwordMatch = usernamePattern.matcher(password);
+		Matcher passwordMatch = passwordPattern.matcher(password);
 		if (!usernameMatch.matches() && !passwordMatch.matches()) {
 			error = "Invalid Username and Password";
 			model.addAttribute("error", error);
