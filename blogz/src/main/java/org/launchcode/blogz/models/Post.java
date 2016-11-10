@@ -1,86 +1,94 @@
 package org.launchcode.blogz.models;
 
-import java.util.ArrayList;
 import java.util.Date;
 
-public class Post extends Entity{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "post")
+public class Post extends AbstractEntity{
 	private String title;
 	private String body;
-	private String author;
-	private final Date created;
+	private User author;
+	private Date created;
 	private Date modified;
-	private static ArrayList<Post> postList = new ArrayList<Post>();
 
-	public Post(String title, String body, String author) {
+	public Post(String title, String body, User author) {
 		super();
-		// TODO Auto-generated constructor stub
+		
 		this.title = title;
 		this.body = body;
-		this.author = "AUTHOR"; // change this
+		this.author = author; // change this
 		this.created = new Date();
 		this.modified = created;
-		Post.postList.add(this);
+		this.updated();
+		
+		author.addPost(this);
 	}
 	
+	public Post() {}
+	
+	@NotNull
+	@Column(name = "title")
 	public String getTitle() {
 		return this.title;
 	}
 	
+	public void setTitle(String title) {
+		this.title = title;
+		this.updated();
+	}
+	
+	@NotNull
+	@Column(name = "body")
 	public String getBody() {
 		return this.body;
 	}
 	
-	public String getAuthor() {
+	public void setBody(String body) {
+		this.body = body;
+		this.updated();
+	}
+	
+	@ManyToOne // tells db that many posts will be for 1 author (works with @OneToMany)
+	public User getAuthor() {
 		return this.author;
 	}
 	
+	@NotNull
+	@OrderColumn // tells db that this is the default ordering
+	@Column(name = "created")
 	public Date getCreated() {
 		return this.created;
 	}
+
+	@SuppressWarnings("unused")
+	private void setCreated(Date created) {
+		this.created = created;
+	}
 	
+	@NotNull
+	@Column(name = "modified")
 	public Date getModified() {
 		return this.modified;
 	}
 		
-	public void modifyTitleBody(Post p, String title, String body) {
-		p.title = title;
-		p.body = body;
-		p.modified = new Date();
+	@SuppressWarnings("unused")
+	private void setModified(Date modified) {
+		this.modified = modified;
 	}
-
-	public void modifyTitle(Post p, String title) {
-		p.title = title;
-		p.modified = new Date();
-	}
-
-	public void modifyBody(Post p, String body) {
-		p.body = body;
-		p.modified = new Date();
-	}
-
+	
 	public String toString() {
 		return "Title: " + this.title + "\nBody:\n" + this.body + "\nCreated: " + this.created + "\nModified: " + this.modified;
 	}
 	
-	public static ArrayList<Post> getPostList() {
-//		System.out.println(postList);
-		return postList;
+	private void updated() {
+		this.modified = new Date();
 	}
-	
-//	public static void main(String args[]) {
-//		Post p = new Post("hello","body");
-//		Post p2 = new Post("hello","body");
-//		Post p3 = new Post("hello","body");
-//		Post p4 = new Post("hello","body");
-//		Post p5 = new Post("hello","body");
-//		Post p6 = new Post("hello","body");
-//		Post p7 = new Post("hello","body");
-//		System.out.println(p.getUID());
-//		System.out.println(p2.getUID());
-//		System.out.println(p3.getUID());
-//		System.out.println(p4.getUID());
-//		System.out.println(p5.getUID());
-//		System.out.println(p6.getUID());
-//		System.out.println(p2.getUID());
-//	}
+
 }

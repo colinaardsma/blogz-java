@@ -1,62 +1,77 @@
 package org.launchcode.blogz.models;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class User extends Entity{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+@Entity // tells db that this object should be entered into db
+@Table(name = "user") // tells db which table to enter into
+public class User extends AbstractEntity{
 	
 	private String username;
-	private String password;
-	private static ArrayList<User> userList = new ArrayList<User>();
-
+	private String passHash;
+	private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+	// all posts by given user
+	private List<Post> posts;
+	
 	public User(String username, String password) {
 		super();
-//		Scanner in = new Scanner(System.in);
-//		do{
-			if (isValidUsername(username)) {
-				this.username = username;
-//			} else {
-//				System.out.println("Invalid username, must be 4-11 characters using letters, numbers, - and _\nPlease enter a valid username: ");
-//				this.username = in.next();
-			}
-//		} while (this.username == null);
-//		in.close();
-		this.password = User.hashPassword(password);
-		User.userList.add(this);
+
+		if (!isValidUsername(username)) {
+			throw new IllegalArgumentException("Invalid username");
+		}
+		this.username = username;
+		this.passHash = hashPassword(password);
 	}
 	
+	public User() {}
+	
+	@NotNull
+	@Column(name = "username", unique = true)
 	public String getUsername() {
 		return this.username;
 	}
 	
-	public String getPassword() {
-		return this.password;
+	@SuppressWarnings("unused")
+	private void setUsername(String username) {
+		this.username = username;
 	}
 	
+	@NotNull
+	@Column(name = "passHash")
+	public String getPassHash() {
+		return this.passHash;
+	}
+	
+	public  boolean isMatchingPassword(String password) {
+		return encoder.matches(password, passHash);
+	}
+	
+	@SuppressWarnings("unused")
+	private void setPassHash(String passHash) {
+		this.passHash = passHash;
+	}
+
 	public String toString() {
-		return "Username: " + this.username + " / Password: " + this.password;
+		return "Username: " + this.username + " / Password: " + this.passHash;
 	}
 	
 	public static String hashPassword(String password) {
-		int shift = 13;
-		String hashPass = "";
-		
-		for (int i = 0; i < password.length(); i++) {
-			char c = (char)(password.charAt(i) + shift);
-			if (c > 'z') {
-				c = (char)(password.charAt(i) - (75 - shift));
-			}
-			hashPass += Character.toString(c);
-		}
-		return hashPass;
+		return encoder.encode(password);
 	}
 	
-	public static boolean isValidPassword(String password, String hashPassword) {
-		if (User.hashPassword(password).equals(hashPassword)) {
-			return true;
-		}
-		return false;
+	public static boolean isValidPassword(String password) {
+		boolean validPass = Pattern.matches("[a-zA-Z0-9_-]{6,20}$", password);
+		return validPass;
 	}
 	
 	public static boolean isValidUsername(String username) {
@@ -64,25 +79,18 @@ public class User extends Entity{
 		return validName;
 	}
 	
-	public static ArrayList<User> getUserList() {
-//		System.out.println(userList);
-		return userList;
+	protected void addPost(Post post) {
+		posts.add(post);
 	}
 	
-//	public static void main(String args[]) {
-//		User u = new User("mememe", "Pass1234");
-//		User u2 = new User("mememe", "Pass1234");
-//		User u3 = new User("mememe", "Pass1234");
-//		User u4 = new User("mememe", "Pass1234");
-//		User u5 = new User("mememe", "Pass1234");
-//		User u6 = new User("mememe", "Pass1234");
-//		System.out.println(u.getUID());
-//		System.out.println(u2.getUID());
-//		System.out.println(u3.getUID());
-//		System.out.println(u4.getUID());
-//		System.out.println(u5.getUID());
-//		System.out.println(u6.getUID());
-//		System.out.println(u2.getUID());
-//	}
+	@OneToMany // for every 1 user there will be many posts
+	@JoinColumn(name = "author_uid") // look for all posts in posts table that matches user uid value
+	public List<Post> getPosts() {
+		return posts;
+	}
+	
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 	
 }

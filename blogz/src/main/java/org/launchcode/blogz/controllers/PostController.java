@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class PostController {
+public class PostController extends AbstractController{
 	
 	@RequestMapping(value = "/blog/newpost", method = RequestMethod.GET)
-	public String newPostForm(HttpServletRequest request, Model model) {
+	public String newPostForm() {
 		return "newpost";
 	}
 	
@@ -33,9 +33,9 @@ public class PostController {
 		if (title != "" && body != "") {
 			Post post = new Post(title, body, "AUTHOR");
 			int id = post.getUID();
-			return "redirect:/blog/" + id;
+			return "redirect:/blog/" + id; // change to "redirect:index"?
 		} else {
-			String error = "we need both a title and body!";
+			String error = "Need both title and body!";
 			model.addAttribute("error", error);
 			return "newpost";
 		}		
@@ -74,7 +74,16 @@ public class PostController {
 		
 		return "post";
 	}
+	
+	@RequestMapping(value = "/blog/{username}", method = RequestMethod.GET)
+	public String userPosts(@PathVariable ("username") String username, Model model) {
 		
+		//display userposts
+		
+		return "blog";
+	}
+	
+	// can i use the userPosts method to handle everything?
 	@RequestMapping(value = "/blog", method = RequestMethod.GET)
 	public String allPosts(HttpServletRequest request, Model model) {
 		String p = request.getParameter("page");
