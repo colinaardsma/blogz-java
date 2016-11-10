@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.launchcode.blogz.models.User;
+import org.launchcode.blogz.models.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -31,7 +32,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 			User user;
 			Integer userId = (Integer) request.getSession().getAttribute(AbstractController.userSessionKey);
 			
-			if (userID != null) {
+			if (userId != null) {
 				user = userDao.findByUid(userId);
 				
 				if (user != null) {
