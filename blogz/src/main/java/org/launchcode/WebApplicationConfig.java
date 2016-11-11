@@ -6,16 +6,17 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class WebApplicationConfig extends WebMvcConfigurerAdapter{
+public class WebApplicationConfig extends WebMvcConfigurerAdapter {
 
-	// Create managed bean to allow autowriting
-	@Bean
-	public AuthenticationInterceptor authenticationInterceptor() {
-		return new AuthenticationInterceptor();
-	}
-	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authenticationInterceptor());
-	}
+    // Create managed bean to allow autowiring
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor());
+    }
+
 }

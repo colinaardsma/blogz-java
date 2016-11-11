@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
 import org.launchcode.blogz.models.User;
@@ -52,7 +53,7 @@ public class AuthenticationController extends AbstractController {
 		userDao.save(user);
 		
 		// access session
-		Session thisSession = request.getSession();
+		HttpSession thisSession = request.getSession();
 		
 		return "redirect:blog/newpost";
 	}

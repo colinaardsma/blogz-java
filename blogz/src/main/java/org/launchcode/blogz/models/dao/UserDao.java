@@ -16,7 +16,7 @@ public interface UserDao extends CrudRepository<User, Integer> {
 	
 	User findByUsername(String username); // the portion following "findBy" must match a method in the user class (for username must be "Username" first letter cap, rest lower)
 	
-	List<User> finalAll(); // required for hibernate and spring to automatically use this interface
+	List<User> findAll(); // required for hibernate and spring to automatically use this interface
 	
 	// we can use any method named "findBy"[variable in class]
 

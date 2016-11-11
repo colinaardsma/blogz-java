@@ -14,8 +14,8 @@ public interface PostDao extends CrudRepository<Post, Integer> {
 	
 	List<Post> findByAuthor(int authorId); // required for hibernate and spring to automatically use this interface
 	
-	List<Post> finalAll(); // required for hibernate and spring to automatically use this interface
+	List<Post> findAll(); // required for hibernate and spring to automatically use this interface
 
-	List<Post> finalByUid(int uid); // required for hibernate and spring to automatically use this interface
+	Post findByUid(int uid); // required for hibernate and spring to automatically use this interface
 	
 }

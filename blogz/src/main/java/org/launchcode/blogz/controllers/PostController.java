@@ -1,18 +1,18 @@
 package org.launchcode.blogz.controllers;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.launchcode.blogz.models.Post;
+import org.launchcode.blogz.models.User;
+import org.launchcode.blogz.models.dao.PostDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PostController extends AbstractController{
@@ -24,6 +24,7 @@ public class PostController extends AbstractController{
 	
 	@RequestMapping(value = "/blog/newpost", method = RequestMethod.POST)
 	public String newPost(HttpServletRequest request, Model model) {
+		User user = request.getParameter("user.author");
 		String title = request.getParameter("title");
 		model.addAttribute("title", title);
 		
@@ -31,7 +32,7 @@ public class PostController extends AbstractController{
 		model.addAttribute("body", body);
 				
 		if (title != "" && body != "") {
-			Post post = new Post(title, body, "AUTHOR");
+			Post post = new Post(title, body, user);
 			int id = post.getUID();
 			return "redirect:/blog/" + id; // change to "redirect:index"?
 		} else {
@@ -41,35 +42,24 @@ public class PostController extends AbstractController{
 		}		
 	}
 	
-//	@RequestMapping(value = "/path/to/{iconId}", method = RequestMethod.GET) 
-//	public void webletIconData(@PathVariable String iconId, 
-//	    @RequestParam("size") String iconSize, 
-//	    HttpServletResponse response)
 	
 	@RequestMapping(value = "/blog/{postNum}", method = RequestMethod.GET)
 	public String viewPost(HttpServletRequest request, Model model, @PathVariable ("postNum") int postNum) {
-		ArrayList<Post> postList = Post.getPostList();
-		int number = postNum;
+		Post post = PostDao.findByUid(postNum);
 
-		
-		String title = null;
-		String body = null;
-		String author = null;
-		Date created = null;
-		
-		for (Post p: postList) {
-			if (p.getUID() == number) {
-				title = p.getTitle();
-				body = p.getBody();
-				author = p.getAuthor();
-				created = p.getCreated();
-			}
-		}
+		String title = post.getTitle();
+		String body = post.getBody();
+		User author = post.getAuthor();
+		Date created = post.getCreated();
+		Date modified = post.getModified();
+
+		int number = postNum;
 		
 		model.addAttribute("title", title);
 		model.addAttribute("body", body);
 		model.addAttribute("author", author);
 		model.addAttribute("created", created);
+		model.addAttribute("modified", modified);
 		model.addAttribute("numer", number - 1);
 		
 		return "post";
